@@ -1,0 +1,306 @@
+% main.tex
+% NeurIPS 2025 Poster Template (3-column)
+% Saurabh / SPIRE Lab / IISc
+
+\documentclass[final]{beamer}
+
+% ---------------- Poster size ----------------
+% A0 landscape = 1189mm x 841mm
+\usepackage[size=a0,orientation=landscape,scale=1.0]{beamerposter}
+
+% ---------------- Packages ----------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{wrapfig}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{tikz}
+\usepackage{caption}
+\captionsetup{font=footnotesize,labelfont=bf}
+
+% ---------------- Colors ----------------
+\definecolor{HeaderBG}{RGB}{10,25,47}      % dark navy
+\definecolor{HeaderFG}{RGB}{255,255,255}   % white
+\definecolor{Accent}{RGB}{0,153,153}       % teal
+\definecolor{BodyText}{RGB}{20,20,20}      % almost black
+\definecolor{BoxBG}{RGB}{250,250,250}      % light gray
+\definecolor{BoxBorder}{RGB}{220,220,220}  % border gray
+
+\setbeamercolor{normal text}{fg=BodyText,bg=white}
+\setbeamercolor{block title}{fg=Accent,bg=white}
+\setbeamercolor{block body}{fg=BodyText,bg=BoxBG}
+
+\setbeamerfont{block title}{series=\bfseries,size=\Large}   % ~34pt at this scale
+\setbeamerfont{block body}{size=\large}                      % ~22-24pt body
+
+% Tight poster bullets
+\setlist[itemize]{leftmargin=1.2em,label=\textbullet,topsep=0.4em,itemsep=0.4em}
+\setlist[enumerate]{leftmargin=1.4em,topsep=0.4em,itemsep=0.4em}
+
+% -------------- Title info --------------
+\title{
+    {\bfseries Jointly Improving Dialect Identification\\[-0.3em]
+    and ASR in Indian Languages}
+}
+\newcommand{\subtitletext}{%
+    Multimodal Feature Fusion from Dialect-Aware ASR boosts
+    fine-grained dialect classification across Indian languages
+}
+
+\author{
+    Saurabh$^{1}$ \quad
+    Author Name$^{1}$ \quad
+    Author Name$^{2}$ \quad
+    Author Name$^{1,2}$
+}
+
+\institute[shortinst]{
+    $^{1}$SPIRE Lab, Indian Institute of Science (IISc) Bengaluru \quad
+    $^{2}$Some Other Institute
+}
+
+% -------------- Column widths --------------
+% beamerposter defines \paperwidth etc. We'll carve 3 columns with gaps.
+\newlength{\sepwidth}
+\newlength{\colwidth}
+\setlength{\sepwidth}{0.02\paperwidth}   % gap between columns
+\setlength{\colwidth}{0.30\paperwidth}   % each column width
+
+% Convenience environment for consistent spacing around blocks
+\newenvironment{PosterBlock}[1]{%
+    \begin{block}{#1}
+    \vspace{0.5em}
+}{%
+    \vspace{0.5em}
+    \end{block}
+    \vspace{1.0cm}
+}
+
+% -------------- Begin Document --------------
+\begin{document}
+\begin{frame}[t]
+
+% -------- CUSTOM HEADER BAR --------
+% Full-width dark band with title, subtitle, authors, institutes
+\begin{tikzpicture}[remember picture,overlay]
+    \fill[HeaderBG] (current page.north west)
+        rectangle ([yshift=-6cm]current page.north east);
+\end{tikzpicture}
+
+% Put text on top of that bar
+\begin{minipage}[t][6cm][c]{\paperwidth}
+    \centering
+    \vspace{0.5cm}
+
+    {\color{HeaderFG}\bfseries\fontsize{52}{54}\selectfont \inserttitle \par}
+
+    \vspace{0.8cm}
+
+    {\color{HeaderFG}\fontsize{32}{34}\selectfont \subtitletext \par}
+
+    \vspace{1.0cm}
+
+    {\color{HeaderFG}\Large \insertauthor \par}
+
+    \vspace{0.4cm}
+
+    {\color{HeaderFG}\large \insertinstitute \par}
+
+    \vspace{0.5cm}
+\end{minipage}
+
+\vspace{1cm} % space below header into columns
+
+
+% --------- COLUMN LAYOUT MANUAL USING MINIPAGES ---------
+% We manually place 3 minipages instead of beamer 'columns{}' to avoid package/version issues.
+
+\hspace*{\sepwidth}%
+\begin{minipage}[t]{\colwidth}
+
+    % ===== COLUMN 1 =====
+    \begin{PosterBlock}{1. Motivation}
+    \large
+    \justifying
+    India has hundreds of dialects. Standard ASR models often
+    collapse accent / dialect variation, causing:
+    \begin{itemize}
+        \item High WER for minority dialects
+        \item Misrouting in voice assistants / call centers
+        \item Unfair downstream analytics
+    \end{itemize}
+
+    Our goal:
+    \begin{itemize}
+        \item Build ASR that \textbf{knows which dialect it is hearing}
+        \item Improve both \textbf{transcription quality} and \textbf{dialect ID} jointly
+    \end{itemize}
+    \end{PosterBlock}
+
+    \begin{PosterBlock}{2. Key Idea (High-level)}
+    \large
+    \justifying
+    \textbf{We fuse acoustic + ASR decoder + text embedding features}
+    into a unified dialect representation:
+    \begin{itemize}
+        \item Conformer / SSL-ASR encoder captures speech acoustics
+        \item Decoder hypotheses give transcript-aware signals
+        \item Lightweight RoBERTa-style text encoder refines dialect cues
+    \end{itemize}
+
+    Training is \textbf{multi-task}: ASR loss + dialect loss.
+    \end{PosterBlock}
+
+    \begin{PosterBlock}{3. Contributions}
+    \large
+    \begin{itemize}
+        \item A joint ASR+DID architecture that uses ASR internals as dialect clues
+        \item Results on 9 Indian languages, 30+ dialects
+        \item Consistent gains on minority dialects with modest GPU budget
+    \end{itemize}
+    \end{PosterBlock}
+
+\end{minipage}%
+\hspace*{\sepwidth}%
+\begin{minipage}[t]{\colwidth}
+
+    % ===== COLUMN 2 =====
+    \begin{PosterBlock}{4. Method / Architecture}
+    \large
+    \justifying
+    \textbf{Pipeline overview:}
+    \begin{enumerate}
+        \item SSL-initialized Conformer encoder produces frame-level speech reps
+        \item Hybrid CTC/Attention decoder outputs transcript
+        \item Hypothesized transcript is fed into a compact RoBERTa-like text encoder
+        \item We fuse (a) acoustic embedding, (b) decoder state, (c) text embedding
+        \item A shared classifier predicts dialect ID
+    \end{enumerate}
+
+    \vspace{1cm}
+
+    \centering
+    % Replace with your block diagram figure
+    \fbox{\begin{minipage}{0.9\linewidth}
+        \vspace{4cm}
+        \centering
+        Architecture Diagram Placeholder\\
+        (example\_architecture\_placeholder.png)
+        \vspace{4cm}
+    \end{minipage}}
+
+    \vspace{0.5cm}
+    \raggedright
+    \footnotesize
+    Figure 1. Model overview. Replace this box with \includegraphics.
+    \end{PosterBlock}
+
+    \begin{PosterBlock}{5. Training Setup}
+    \large
+    \begin{itemize}
+        \item Dataset: multi-dialect Indian speech corpus
+        \item Languages: Bengali, Bhojpuri, Chhattisgarhi, Kannada,
+              Magahi, Maithili, Marathi, Telugu, Hindi
+        \item Loss: CTC+Attention for ASR + Cross-Entropy for Dialect ID
+        \item Hardware: ~A50 24GB-class GPUs (affordable)
+    \end{itemize}
+
+    \vspace{1cm}
+    \centering
+    % Replace with dialect map figure
+    \fbox{\begin{minipage}{0.9\linewidth}
+        \vspace{4cm}
+        \centering
+        Dialect Map / District Heatmap Placeholder\\
+        (dataset\_map\_placeholder.png)
+        \vspace{4cm}
+    \end{minipage}}
+
+    \vspace{0.5cm}
+    \raggedright
+    \footnotesize
+    Figure 2. Dialect / geographic distribution.
+    \end{PosterBlock}
+
+\end{minipage}%
+\hspace*{\sepwidth}%
+\begin{minipage}[t]{\colwidth}
+
+    % ===== COLUMN 3 =====
+    \begin{PosterBlock}{6. Results}
+    \large
+    \justifying
+    \textbf{Dialect ID Accuracy (\%)} \\
+    Minority dialects benefit the most.
+
+    \vspace{0.5cm}
+
+    \centering
+    % Replace with barplot
+    \fbox{\begin{minipage}{0.95\linewidth}
+        \vspace{4cm}
+        \centering
+        Barplot Placeholder\\
+        (results\_barplot\_placeholder.png)
+        \vspace{4cm}
+    \end{minipage}}
+
+    \vspace{0.5cm}
+    \raggedright
+    \footnotesize
+    Figure 3. DID accuracy vs. baseline ECAPA / Conformer.
+
+    \vspace{0.8cm}
+
+    \textbf{ASR WER / CER:}
+    \begin{itemize}
+        \item Joint training reduces WER for low-resource dialects
+        \item Especially in noisy / spontaneous speech
+    \end{itemize}
+    \end{PosterBlock}
+
+    \begin{PosterBlock}{7. Takeaways}
+    \large
+    \begin{itemize}
+        \item ASR internals are powerful dialect cues
+        \item You don't need a giant LLM-ASR to get dialect robustness
+        \item Good step toward equitable speech tech for India
+    \end{itemize}
+    \end{PosterBlock}
+
+    % References box with smaller font
+    \begin{block}{References}
+    \footnotesize
+    [1] Example Ref 1. "Multidialect ASR." Conf. 2024.\\[0.5em]
+    [2] Example Ref 2. "Dialect ID with SSL." Journal 2023.\\[0.5em]
+    [3] Example Ref 3. "Acoustic-text fusion." NeurIPS 2022.\\[0.5em]
+    [4] Example Ref 4. "Speech tech for India." ICASSP 2025.
+    \end{block}
+
+    \vspace{0.5cm}
+    \centering
+    \footnotesize
+    \textbf{Contact:} saurabh@iisc.ac.in\\[0.5em]
+    (QR code / GitHub / SPIRE Lab logo goes here)
+\end{minipage}%
+\hspace*{\sepwidth}%
+
+% -------- Footer line --------
+\vspace{1cm}
+
+\begin{center}
+    \rule{0.95\paperwidth}{0.5pt}\\[0.5cm]
+    \small
+    \textbf{SPIRE Lab, IISc Bengaluru} \quad|\quad
+    NeurIPS 2025 \quad|\quad
+    Dialect-Aware ASR + DID
+\end{center}
+
+\end{frame}
+\end{document}
